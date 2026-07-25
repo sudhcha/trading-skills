@@ -29,6 +29,40 @@ FINAL TRANSACTION PROPOSAL: [BUY / OVERWEIGHT / HOLD / UNDERWEIGHT / SELL] — o
 
 ---
 
+### `/sell_put <TICKER>`
+
+Cash-secured put selling advisor. For a stock you're bullish on or willing to own, this pipeline recommends the specific strike price and expiration date for selling a put to collect premium income. Fine if the option expires worthless; willing to be assigned at the strike.
+
+| Stage | Agent |
+|-------|-------|
+| 1 | Price & Trend Analyst — current price, trend direction, key support levels |
+| 2 | Options Environment Analyst — IV rank, catalysts, put skew, liquidity |
+| 3 | Strike Selector — optimal strike anchored to support + delta target |
+| 4 | Expiration Selector — optimal DTE in the theta sweet spot |
+| 5 | Trade Risk Analyst — full metrics table (premium, breakeven, return on capital) |
+| 6 | Options Advisor — final recommendation with risk notes and exit rule |
+
+Output ends with:
+
+```
+╔══════════════════════════════════════════════╗
+║         SELL PUT RECOMMENDATION              ║
+╠══════════════════════════════════════════════╣
+║ Ticker     : [TICKER]                        ║
+║ Action     : SELL PUT                        ║
+║ Strike     : $XXX                            ║
+║ Expiration : YYYY-MM-DD (~XX DTE)            ║
+║ Est. Premium: $X.XX/share ($XXX/contract)    ║
+║ Breakeven  : $XXX.XX                         ║
+║ Cost basis if assigned: $XXX.XX              ║
+║ Return if OTM: X.X% (~XX% annualized)        ║
+╚══════════════════════════════════════════════╝
+```
+
+**Example:** `/sell_put SPMO`
+
+---
+
 ## Credit
 
 This skill is a distillation of the **TradingAgents** multi-agent framework, created by **Yijia Xiao, Edward Sun, Di Luo, and Wei Wang** at TauricResearch. The agent roles, pipeline structure, debate mechanics, and rating scale all originate from their work.
@@ -67,21 +101,24 @@ Claude Code supports custom slash commands as Markdown files. The command file u
 ```bash
 mkdir -p ~/.claude/commands
 cp skills/stock_reco/skill.md ~/.claude/commands/stock_reco.md
+cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 ```
 
 That's it. Open any Claude Code session and type:
 
 ```
 /stock_reco AAPL
+/sell_put SPMO
 ```
 
-Claude Code will substitute `$ARGUMENTS` with `AAPL` and run the full pipeline.
+Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
 
 **Alternatively, install per-project** (only active when Claude Code is open in that directory):
 
 ```bash
 mkdir -p /path/to/your/project/.claude/commands
 cp skills/stock_reco/skill.md /path/to/your/project/.claude/commands/stock_reco.md
+cp skills/sell_put/skill.md /path/to/your/project/.claude/commands/sell_put.md
 ```
 
 ---
@@ -94,16 +131,19 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
 
 1. Go to [claude.ai](https://claude.ai) and open or create a **Project** (e.g. "Trading").
 2. On the right-hand panel, click **+** next to **Instructions**.
-3. Paste the full contents of [`skills/stock_reco/chat_instructions.md`](skills/stock_reco/chat_instructions.md).
+3. Paste the full contents of both instruction files, one after the other:
+   - [`skills/stock_reco/chat_instructions.md`](skills/stock_reco/chat_instructions.md)
+   - [`skills/sell_put/chat_instructions.md`](skills/sell_put/chat_instructions.md)
 4. Save.
 
-Now, in any new chat within that project, type:
+Now, in any new chat within that project, type either:
 
 ```
 /stock_reco SPCX
+/sell_put SPMO
 ```
 
-Claude will recognize the trigger and work through all six pipeline stages automatically, using today's date. No additional prompt is needed.
+Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
 
 **Note:** Instructions are applied to every chat in the project, so this works best if the project is dedicated to trading analysis.
 
@@ -114,7 +154,10 @@ Claude will recognize the trigger and work through all six pipeline stages autom
 ```
 trading-skills/
 └── skills/
-    └── stock_reco/
+    ├── stock_reco/
+    │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+    │   └── chat_instructions.md   # Claude Chat project instructions
+    └── sell_put/
         ├── skill.md               # Claude Code command (uses $ARGUMENTS)
         └── chat_instructions.md   # Claude Chat project instructions
 ```
