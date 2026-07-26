@@ -63,6 +63,47 @@ Output ends with:
 
 ---
 
+### `/sell_call <TICKER> <COST_BOUGHT>`
+
+Covered call selling advisor. You provide your average cost basis — the pipeline assesses the stock's long-term quality to set a **Retention Mode**, then recommends the optimal strike and expiration.
+
+| Mode | When | Strike approach |
+|------|------|----------------|
+| **RETAIN** | Long-term quality holding | Far OTM (10–15%+), low delta — maximize probability of keeping the stock |
+| **NEUTRAL** | Decent but not compelling | Moderate OTM (7–12%), balanced premium |
+| **ACCEPT** | Not a long-term hold; exit welcome | Closer to ATM (3–8%) — maximize premium, assignment is fine |
+
+| Stage | Agent |
+|-------|-------|
+| 1 | Long-Term Quality Analyst — retention mode verdict (RETAIN / NEUTRAL / ACCEPT) |
+| 2 | Price & Trend Analyst — current price vs. cost basis, key resistance levels |
+| 3 | Options Environment Analyst — IV rank, earnings timing, ex-div risk, call skew |
+| 4 | Strike Selector — mode-dependent strike; enforces strike ≥ cost_bought |
+| 5 | Expiration Selector — DTE sweet spot; earnings clearance for RETAIN mode |
+| 6 | Covered Call Advisor — full P&L table + final recommendation with exit rule |
+
+Output ends with:
+
+```
+╔═══════════════════════════════════════════════════╗
+║          SELL CALL RECOMMENDATION                 ║
+╠═══════════════════════════════════════════════════╣
+║ Ticker         : [TICKER]                         ║
+║ Retention Mode : RETAIN / NEUTRAL / ACCEPT        ║
+║ Action         : SELL CALL                        ║
+║ Strike         : $XXX                             ║
+║ Expiration     : YYYY-MM-DD (~XX DTE)             ║
+║ Est. Premium   : $X.XX/share ($XXX/contract)      ║
+║ Cost Basis     : $XXX.XX → Net: $XXX.XX           ║
+║ P&L if called away  : +$XXX/contract              ║
+║ Return if OTM  : X.X% (~XX% annualized)           ║
+╚═══════════════════════════════════════════════════╝
+```
+
+**Example:** `/sell_call SPMO 87.50`
+
+---
+
 ## Credit
 
 This skill is a distillation of the **TradingAgents** multi-agent framework, created by **Yijia Xiao, Edward Sun, Di Luo, and Wei Wang** at TauricResearch. The agent roles, pipeline structure, debate mechanics, and rating scale all originate from their work.
@@ -102,6 +143,7 @@ Claude Code supports custom slash commands as Markdown files. The command file u
 mkdir -p ~/.claude/commands
 cp skills/stock_reco/skill.md ~/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
+cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
 ```
 
 That's it. Open any Claude Code session and type:
@@ -109,6 +151,7 @@ That's it. Open any Claude Code session and type:
 ```
 /stock_reco AAPL
 /sell_put SPMO
+/sell_call SPMO 87.50
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
@@ -119,6 +162,7 @@ Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeli
 mkdir -p /path/to/your/project/.claude/commands
 cp skills/stock_reco/skill.md /path/to/your/project/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md /path/to/your/project/.claude/commands/sell_put.md
+cp skills/sell_call/skill.md /path/to/your/project/.claude/commands/sell_call.md
 ```
 
 ---
@@ -131,16 +175,18 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
 
 1. Go to [claude.ai](https://claude.ai) and open or create a **Project** (e.g. "Trading").
 2. On the right-hand panel, click **+** next to **Instructions**.
-3. Paste the full contents of both instruction files, one after the other:
+3. Paste the full contents of all instruction files, one after the other:
    - [`skills/stock_reco/chat_instructions.md`](skills/stock_reco/chat_instructions.md)
    - [`skills/sell_put/chat_instructions.md`](skills/sell_put/chat_instructions.md)
+   - [`skills/sell_call/chat_instructions.md`](skills/sell_call/chat_instructions.md)
 4. Save.
 
-Now, in any new chat within that project, type either:
+Now, in any new chat within that project, type any of:
 
 ```
 /stock_reco SPCX
 /sell_put SPMO
+/sell_call SPMO 87.50
 ```
 
 Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
@@ -157,8 +203,11 @@ trading-skills/
     ├── stock_reco/
     │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
     │   └── chat_instructions.md   # Claude Chat project instructions
-    └── sell_put/
-        ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+    ├── sell_put/
+    │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+    │   └── chat_instructions.md   # Claude Chat project instructions
+    └── sell_call/
+        ├── skill.md               # Claude Code command (uses $ARGUMENTS: TICKER COST_BOUGHT)
         └── chat_instructions.md   # Claude Chat project instructions
 ```
 
