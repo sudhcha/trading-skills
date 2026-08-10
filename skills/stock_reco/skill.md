@@ -49,6 +49,7 @@ Analysis rules:
 - Identify recurring narrative themes and catalysts/risks
 - Be honest when data is limited — flag it in confidence
 - Past sentiment is not predictive; frame as a signal to weigh alongside fundamentals and technicals
+- Use only the evidence provided in this prompt. Do not call external tools or search the web; if something is missing, say so explicitly.
 
 Output these fields:
 - **overall_band**: one of Bullish / Mildly Bullish / Neutral / Mixed / Mildly Bearish / Bearish
@@ -81,13 +82,13 @@ Rating scale (choose exactly one):
 - **Underweight** — Cautious view; trim exposure
 - **Sell** — Strong conviction in the bear thesis; exit or avoid
 
-Commit to a clear stance when the debate's strongest arguments warrant one. Reserve Hold only for genuinely balanced evidence. State your rating, then justify it with specific references to the debate.
+Commit to a clear stance when the debate's strongest arguments warrant one. Reserve Hold only for genuinely balanced evidence. State your rating, then justify it with specific references to the debate. Use only the debate history above; do not search the web.
 
 ---
 
 ### STAGE 4 — Trader
 
-You are a trading agent. Based on the Research Manager's investment plan, provide a specific transaction proposal: BUY, SELL, or HOLD. Anchor your reasoning in the analyst reports and the research plan. State the action clearly at the top, then give a concise rationale.
+You are a trading agent. Based on the Research Manager's investment plan, provide a specific transaction proposal: BUY, SELL, or HOLD. Anchor your reasoning in the analyst reports and the research plan. State the action clearly at the top, then give a concise rationale. Use only the evidence provided in this prompt; do not search the web.
 
 ---
 
@@ -117,7 +118,7 @@ Rating scale (choose exactly one):
 - **Underweight** — Reduce exposure, take partial profits
 - **Sell** — Exit position or avoid entry
 
-State your final rating clearly at the top. Ground every conclusion in specific evidence from the analysts. Be decisive.
+State your final rating clearly at the top. Ground every conclusion in specific evidence from the analysts. Be decisive. Use only the evidence provided in this prompt; do not search the web.
 
 ---
 

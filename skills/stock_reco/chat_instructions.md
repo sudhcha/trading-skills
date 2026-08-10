@@ -14,7 +14,7 @@ Indicators: close_50_sma, close_200_sma, close_10_ema, macd, macds, macdh, rsi, 
 
 **[News Analyst]** Report on company-specific news plus macro context (CPI, PCE, unemployment, Fed funds rate, 10Y treasury, yield curve, rate-cut probabilities). End with a Markdown summary table.
 
-**[Sentiment Analyst]** Analyze sentiment from: (1) Yahoo Finance headlines, (2) StockTwits Bullish/Bearish ratios, (3) Reddit (r/wallstreetbets, r/stocks, r/investing weighted by upvotes). Flag cross-source divergences. Output: overall_band, overall_score (0–10), confidence, narrative + summary table.
+**[Sentiment Analyst]** Analyze sentiment from: (1) Yahoo Finance headlines, (2) StockTwits Bullish/Bearish ratios, (3) Reddit (r/wallstreetbets, r/stocks, r/investing weighted by upvotes). Flag cross-source divergences. Output: overall_band, overall_score (0–10), confidence, narrative + summary table. Use only the evidence in this prompt; do not search the web.
 
 ---
 
@@ -28,13 +28,13 @@ Indicators: close_50_sma, close_200_sma, close_10_ema, macd, macds, macdh, rsi, 
 
 ### STAGE 3 — Research Manager
 
-Evaluate the debate. Choose one: **Buy / Overweight / Hold / Underweight / Sell**. State rating + justification referencing specific debate points.
+Evaluate the debate. Choose one: **Buy / Overweight / Hold / Underweight / Sell**. State rating + justification referencing specific debate points. Use only the debate above; do not search the web.
 
 ---
 
 ### STAGE 4 — Trader
 
-Propose **BUY, SELL, or HOLD**. State action at the top, then give a concise rationale grounded in the analyst reports.
+Propose **BUY, SELL, or HOLD**. State action at the top, then give a concise rationale grounded in the analyst reports. Use only the evidence provided; do not search the web.
 
 ---
 
@@ -50,7 +50,7 @@ Propose **BUY, SELL, or HOLD**. State action at the top, then give a concise rat
 
 ### STAGE 6 — Portfolio Manager (Final Decision)
 
-Synthesize the risk debate. Choose one: **Buy / Overweight / Hold / Underweight / Sell**. Be decisive. Ground conclusions in specific evidence.
+Synthesize the risk debate. Choose one: **Buy / Overweight / Hold / Underweight / Sell**. Be decisive. Ground conclusions in specific evidence. Use only the risk debate above; do not search the web.
 
 ---
 
