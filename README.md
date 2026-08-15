@@ -146,12 +146,20 @@ cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
 ```
 
-That's it. Open any Claude Code session and type:
+**Optional short aliases** (`/sr`, `/sp`, `/sc`):
+
+```bash
+cp ~/.claude/commands/stock_reco.md ~/.claude/commands/sr.md
+cp ~/.claude/commands/sell_put.md ~/.claude/commands/sp.md
+cp ~/.claude/commands/sell_call.md ~/.claude/commands/sc.md
+```
+
+Open any Claude Code session and use either the full name or the alias:
 
 ```
-/stock_reco AAPL
-/sell_put SPMO
-/sell_call SPMO 87.50
+/stock_reco AAPL    or  /sr AAPL
+/sell_put SPMO      or  /sp SPMO
+/sell_call SPMO 87.50  or  /sc SPMO 87.50
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
