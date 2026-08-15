@@ -104,47 +104,58 @@ Output ends with:
 
 ---
 
-### `/buy_leap <TICKER>`
+### `/leap <TICKER>`
 
-LEAP call buying advisor. Use after `/stock_reco` gives a strong BUY signal to answer: *should I buy shares or a LEAP call?* Assesses long-term conviction, chooses the right approach, and delivers a full cost/leverage comparison.
+LEAP options advisor. For a stock you're bullish on, recommends **both** a LEAP call (buy) and a LEAP put (sell), then states which is preferred given the current IV environment — so you choose the strategy that fits your capital and risk preference.
 
-| Conviction | Approach | Strike target |
-|-----------|----------|--------------|
-| **HIGH** | Stock Replacement | Deep ITM, delta 0.75–0.85 — behaves like owning shares at ~30–50% of the capital |
-| **MODERATE** | Speculative | ATM/OTM, delta 0.35–0.50 — higher leverage, higher risk |
-| **LOW** | No trade | Pipeline stops and advises against buying a LEAP |
+| Conviction | Implication |
+|-----------|-------------|
+| **HIGH** | Both strategies warranted; deep ITM call or wide-cushion put |
+| **MODERATE** | Both viable with tighter sizing |
+| **LOW** | Pipeline stops — do not use LEAPs |
 
 | Stage | Agent |
 |-------|-------|
-| 1 | Long-Term Conviction Analyst — HIGH / MODERATE / LOW verdict (stops if LOW) |
-| 2 | LEAP Approach Selector — stock replacement vs. speculative, with tradeoff |
-| 3 | Price & Upside Analyst — current price, bear/base/bull 12-month targets |
-| 4 | Strike Selector — delta, intrinsic/extrinsic value, breakeven % move required |
-| 5 | Expiration Selector — January LEAP dates, roll trigger date |
-| 6 | Risk & Cost Analyst — 3-table comparison: cost, scenario P&L, key metrics |
-| 7 | LEAP Advisor — final recommendation with sizing and management rules |
+| 1 | Long-Term Conviction Analyst — HIGH / MODERATE / LOW (stops if LOW) |
+| 2 | Price, Trend & Volatility Analyst — resistance levels (call), support levels (put), IV verdict |
+| 3 | LEAP Strategy Selector — call buy vs. put sell decision framework |
+| 4 | Dual Strike Selector — call strike (delta, intrinsic/extrinsic) + put strike (OTM%, support anchor) |
+| 5 | Expiration Selector — January LEAP dates, roll date (call), 50% profit target (put) |
+| 6 | Risk & Metrics Analyst — 4 tables: side-by-side, scenario P&L, call metrics, put metrics |
+| 7 | LEAP Advisor — both trades specified + preferred strategy stated |
 
-Output ends with:
+Output ends with two recommendation boxes:
 
 ```
 ╔════════════════════════════════════════════════════╗
-║           BUY LEAP RECOMMENDATION                 ║
+║         LEAP CALL RECOMMENDATION (BUY)            ║
 ╠════════════════════════════════════════════════════╣
 ║ Ticker      : [TICKER]                            ║
 ║ Approach    : Stock Replacement / Speculative     ║
 ║ Action      : BUY CALL (LEAP)                     ║
-║ Strike      : $XXX                                ║
-║ Expiration  : YYYY-MM-DD (~XX months)             ║
+║ Strike      : $XXX  |  Expiration : YYYY-MM-DD   ║
 ║ Est. Premium: $XX.XX/share ($X,XXX/contract)      ║
-║ Breakeven   : $XXX.XX at expiry (+XX%)            ║
-║ vs. 100 shares: saves $X,XXX upfront              ║
-║ Leverage    : ~X.Xx                               ║
-║ Max loss    : $X,XXX (premium paid)               ║
-║ Roll by     : YYYY-MM-DD                          ║
+║ Breakeven   : $XXX.XX (+XX%) | Leverage: ~X.Xx   ║
+║ Max loss    : $X,XXX         | Roll by: YYYY-MM   ║
 ╚════════════════════════════════════════════════════╝
+
+╔════════════════════════════════════════════════════╗
+║         LEAP PUT RECOMMENDATION (SELL)            ║
+╠════════════════════════════════════════════════════╣
+║ Ticker      : [TICKER]                            ║
+║ Action      : SELL PUT (LEAP)                     ║
+║ Strike      : $XXX  |  Expiration : YYYY-MM-DD   ║
+║ Est. Premium: $XX.XX/share  | Capital: $X,XXX    ║
+║ Breakeven   : $XXX.XX  | Return if OTM: X.X% ann ║
+║ Cost if assigned: $XXX.XX  | Close at 50%: $XX   ║
+╚════════════════════════════════════════════════════╝
+
+★ PREFERRED: [LEAP CALL / LEAP PUT] — one sentence rationale
 ```
 
-**Example:** `/buy_leap AAPL` or `/bl AAPL`
+**Example:** `/leap AAPL` or `/lp AAPL`
+
+> **Note:** `/buy_leap` and `/bl` are aliases for `/leap` and run the same pipeline.
 
 ---
 
@@ -188,16 +199,16 @@ mkdir -p ~/.claude/commands
 cp skills/stock_reco/skill.md ~/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
-cp skills/buy_leap/skill.md ~/.claude/commands/buy_leap.md
+cp skills/leap/skill.md ~/.claude/commands/leap.md
 ```
 
-**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/bl`):
+**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`):
 
 ```bash
 cp ~/.claude/commands/stock_reco.md ~/.claude/commands/sr.md
 cp ~/.claude/commands/sell_put.md ~/.claude/commands/sp.md
 cp ~/.claude/commands/sell_call.md ~/.claude/commands/sc.md
-cp ~/.claude/commands/buy_leap.md ~/.claude/commands/bl.md
+cp ~/.claude/commands/leap.md ~/.claude/commands/lp.md
 ```
 
 Open any Claude Code session and use either the full name or the alias:
@@ -206,7 +217,7 @@ Open any Claude Code session and use either the full name or the alias:
 /stock_reco AAPL       or  /sr AAPL
 /sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
-/buy_leap AAPL         or  /bl AAPL
+/leap AAPL             or  /lp AAPL
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
@@ -218,7 +229,7 @@ mkdir -p /path/to/your/project/.claude/commands
 cp skills/stock_reco/skill.md /path/to/your/project/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md /path/to/your/project/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md /path/to/your/project/.claude/commands/sell_call.md
-cp skills/buy_leap/skill.md /path/to/your/project/.claude/commands/buy_leap.md
+cp skills/leap/skill.md /path/to/your/project/.claude/commands/leap.md
 ```
 
 ---
@@ -235,7 +246,7 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
    - [`skills/stock_reco/chat_instructions.md`](skills/stock_reco/chat_instructions.md)
    - [`skills/sell_put/chat_instructions.md`](skills/sell_put/chat_instructions.md)
    - [`skills/sell_call/chat_instructions.md`](skills/sell_call/chat_instructions.md)
-   - [`skills/buy_leap/chat_instructions.md`](skills/buy_leap/chat_instructions.md)
+   - [`skills/leap/chat_instructions.md`](skills/leap/chat_instructions.md)
 4. Save.
 
 Or use the one-liner to copy all four to clipboard:
@@ -244,16 +255,16 @@ Or use the one-liner to copy all four to clipboard:
 cat skills/stock_reco/chat_instructions.md \
     skills/sell_put/chat_instructions.md \
     skills/sell_call/chat_instructions.md \
-    skills/buy_leap/chat_instructions.md | pbcopy
+    skills/leap/chat_instructions.md | pbcopy
 ```
 
 Now, in any new chat within that project, type any of:
 
 ```
-/stock_reco SPCX    or  /sr SPCX
-/sell_put SPMO      or  /sp SPMO
+/stock_reco SPCX       or  /sr SPCX
+/sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
-/buy_leap AAPL      or  /bl AAPL
+/leap AAPL             or  /lp AAPL
 ```
 
 Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
@@ -276,7 +287,7 @@ trading-skills/
     ├── sell_call/
     │   ├── skill.md               # Claude Code command (uses $ARGUMENTS: TICKER COST_BOUGHT)
     │   └── chat_instructions.md   # Claude Chat project instructions
-    └── buy_leap/
+    └── leap/
         ├── skill.md               # Claude Code command (uses $ARGUMENTS)
         └── chat_instructions.md   # Claude Chat project instructions
 ```
