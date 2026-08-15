@@ -104,6 +104,50 @@ Output ends with:
 
 ---
 
+### `/buy_leap <TICKER>`
+
+LEAP call buying advisor. Use after `/stock_reco` gives a strong BUY signal to answer: *should I buy shares or a LEAP call?* Assesses long-term conviction, chooses the right approach, and delivers a full cost/leverage comparison.
+
+| Conviction | Approach | Strike target |
+|-----------|----------|--------------|
+| **HIGH** | Stock Replacement | Deep ITM, delta 0.75–0.85 — behaves like owning shares at ~30–50% of the capital |
+| **MODERATE** | Speculative | ATM/OTM, delta 0.35–0.50 — higher leverage, higher risk |
+| **LOW** | No trade | Pipeline stops and advises against buying a LEAP |
+
+| Stage | Agent |
+|-------|-------|
+| 1 | Long-Term Conviction Analyst — HIGH / MODERATE / LOW verdict (stops if LOW) |
+| 2 | LEAP Approach Selector — stock replacement vs. speculative, with tradeoff |
+| 3 | Price & Upside Analyst — current price, bear/base/bull 12-month targets |
+| 4 | Strike Selector — delta, intrinsic/extrinsic value, breakeven % move required |
+| 5 | Expiration Selector — January LEAP dates, roll trigger date |
+| 6 | Risk & Cost Analyst — 3-table comparison: cost, scenario P&L, key metrics |
+| 7 | LEAP Advisor — final recommendation with sizing and management rules |
+
+Output ends with:
+
+```
+╔════════════════════════════════════════════════════╗
+║           BUY LEAP RECOMMENDATION                 ║
+╠════════════════════════════════════════════════════╣
+║ Ticker      : [TICKER]                            ║
+║ Approach    : Stock Replacement / Speculative     ║
+║ Action      : BUY CALL (LEAP)                     ║
+║ Strike      : $XXX                                ║
+║ Expiration  : YYYY-MM-DD (~XX months)             ║
+║ Est. Premium: $XX.XX/share ($X,XXX/contract)      ║
+║ Breakeven   : $XXX.XX at expiry (+XX%)            ║
+║ vs. 100 shares: saves $X,XXX upfront              ║
+║ Leverage    : ~X.Xx                               ║
+║ Max loss    : $X,XXX (premium paid)               ║
+║ Roll by     : YYYY-MM-DD                          ║
+╚════════════════════════════════════════════════════╝
+```
+
+**Example:** `/buy_leap AAPL` or `/bl AAPL`
+
+---
+
 ## Credit
 
 This skill is a distillation of the **TradingAgents** multi-agent framework, created by **Yijia Xiao, Edward Sun, Di Luo, and Wei Wang** at TauricResearch. The agent roles, pipeline structure, debate mechanics, and rating scale all originate from their work.
@@ -144,22 +188,25 @@ mkdir -p ~/.claude/commands
 cp skills/stock_reco/skill.md ~/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
+cp skills/buy_leap/skill.md ~/.claude/commands/buy_leap.md
 ```
 
-**Optional short aliases** (`/sr`, `/sp`, `/sc`):
+**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/bl`):
 
 ```bash
 cp ~/.claude/commands/stock_reco.md ~/.claude/commands/sr.md
 cp ~/.claude/commands/sell_put.md ~/.claude/commands/sp.md
 cp ~/.claude/commands/sell_call.md ~/.claude/commands/sc.md
+cp ~/.claude/commands/buy_leap.md ~/.claude/commands/bl.md
 ```
 
 Open any Claude Code session and use either the full name or the alias:
 
 ```
-/stock_reco AAPL    or  /sr AAPL
-/sell_put SPMO      or  /sp SPMO
+/stock_reco AAPL       or  /sr AAPL
+/sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
+/buy_leap AAPL         or  /bl AAPL
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
@@ -171,6 +218,7 @@ mkdir -p /path/to/your/project/.claude/commands
 cp skills/stock_reco/skill.md /path/to/your/project/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md /path/to/your/project/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md /path/to/your/project/.claude/commands/sell_call.md
+cp skills/buy_leap/skill.md /path/to/your/project/.claude/commands/buy_leap.md
 ```
 
 ---
@@ -187,14 +235,25 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
    - [`skills/stock_reco/chat_instructions.md`](skills/stock_reco/chat_instructions.md)
    - [`skills/sell_put/chat_instructions.md`](skills/sell_put/chat_instructions.md)
    - [`skills/sell_call/chat_instructions.md`](skills/sell_call/chat_instructions.md)
+   - [`skills/buy_leap/chat_instructions.md`](skills/buy_leap/chat_instructions.md)
 4. Save.
+
+Or use the one-liner to copy all four to clipboard:
+
+```bash
+cat skills/stock_reco/chat_instructions.md \
+    skills/sell_put/chat_instructions.md \
+    skills/sell_call/chat_instructions.md \
+    skills/buy_leap/chat_instructions.md | pbcopy
+```
 
 Now, in any new chat within that project, type any of:
 
 ```
-/stock_reco SPCX
-/sell_put SPMO
-/sell_call SPMO 87.50
+/stock_reco SPCX    or  /sr SPCX
+/sell_put SPMO      or  /sp SPMO
+/sell_call SPMO 87.50  or  /sc SPMO 87.50
+/buy_leap AAPL      or  /bl AAPL
 ```
 
 Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
@@ -214,8 +273,11 @@ trading-skills/
     ├── sell_put/
     │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
     │   └── chat_instructions.md   # Claude Chat project instructions
-    └── sell_call/
-        ├── skill.md               # Claude Code command (uses $ARGUMENTS: TICKER COST_BOUGHT)
+    ├── sell_call/
+    │   ├── skill.md               # Claude Code command (uses $ARGUMENTS: TICKER COST_BOUGHT)
+    │   └── chat_instructions.md   # Claude Chat project instructions
+    └── buy_leap/
+        ├── skill.md               # Claude Code command (uses $ARGUMENTS)
         └── chat_instructions.md   # Claude Chat project instructions
 ```
 
