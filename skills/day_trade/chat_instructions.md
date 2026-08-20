@@ -8,7 +8,7 @@ The user wants a short-term options trade (intraday to this week). Your job is t
 
 ### STAGE 1 — Market & Catalyst Analyst
 
-**[Market & Catalyst Analyst]** Assess today's conditions surrounding the ticker. Evaluate: broad market direction (SPY/QQQ, VIX estimate), sector momentum, and any catalysts for the ticker today (earnings, FDA, upgrades, news). Flag catalyst risk as HIGH (binary event within 24 hours) or LOW. Conclude with: market bias, catalyst risk level, and key asymmetric risks before trading today.
+**[Market & Catalyst Analyst]** Assess today's conditions surrounding the ticker. First, determine **instrument type**: is this ticker a broad market index fund or ETF (e.g. SPY, QQQ, IWM, DIA, VTI, GLD, TLT, sector ETFs like XLF/XLE, or any index like SPX/NDX/RUT)? If YES, set **INDEX FLAG: YES** — Sell Put will be excluded in Stage 4, since assignment is not the goal when trading index instruments. Individual stocks and single-name ETFs: **INDEX FLAG: NO**. Then evaluate: broad market direction (SPY/QQQ, VIX estimate), sector momentum, and any catalysts for the ticker today (earnings, FDA, upgrades, news). Flag catalyst risk as HIGH (binary event within 24 hours) or LOW. Conclude with: INDEX FLAG, market bias, catalyst risk level, and key asymmetric risks before trading today.
 
 ---
 
@@ -26,15 +26,19 @@ The user wants a short-term options trade (intraday to this week). Your job is t
 
 ### STAGE 4 — Strategy Selector
 
-**[Strategy Selector]** Select exactly one strategy based on stages 1–3:
+**[Strategy Selector]** Check the INDEX FLAG from Stage 1 first.
+- **INDEX FLAG: YES** → available strategies are **Buy Call and Buy Put only**. Sell Put is excluded — the premise of a cash-secured put (willingness to be assigned the underlying) does not apply to index funds and broad market ETFs.
+- **INDEX FLAG: NO** → all three strategies available.
 
-| Strategy | Use when |
-|----------|----------|
-| **Buy Call** | Bullish signal, IV low/moderate, upside catalyst or breakout setup |
-| **Buy Put** | Bearish signal, IV low/moderate, breakdown setup |
-| **Sell Put** | Bullish/neutral, IV elevated, stock above support, no binary catalyst |
+Select exactly one strategy based on stages 1–3:
 
-**Do not recommend buy call or buy put on earnings day** — IV inflation destroys edge on the buying side; sell put or stand aside. State the selected strategy and why.
+| Strategy | Use when | Index fund? |
+|----------|----------|-------------|
+| **Buy Call** | Bullish signal, IV low/moderate, upside catalyst or breakout setup | ✅ Available |
+| **Buy Put** | Bearish signal, IV low/moderate, breakdown setup | ✅ Available |
+| **Sell Put** | Bullish/neutral, IV elevated, stock above support, no binary catalyst | ❌ Index funds only: excluded |
+
+**Do not recommend buy call or buy put on earnings day** — IV inflation destroys edge on the buying side. For individual stocks: sell put or stand aside. For index funds: stand aside. State the selected strategy and why.
 
 ---
 
