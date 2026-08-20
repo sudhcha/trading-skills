@@ -159,6 +159,52 @@ Output ends with two recommendation boxes:
 
 ---
 
+### `/day_trade <TICKER>`
+
+Day trading options advisor. For a ticker, assesses intraday market conditions and recommends exactly **one** strategy — Buy Call, Buy Put, or Sell Put — with a specific strike, expiration, conviction level, and a three-part exit plan. Recommends standing aside if conditions are poor.
+
+| Conviction | Criteria |
+|-----------|----------|
+| **HIGH** | Trend, momentum, volume, and catalyst all align; clear setup |
+| **MODERATE** | Most factors align; one concern present |
+| **LOW** | Conflicting signals — consider paper trading or standing aside |
+
+| Stage | Agent |
+|-------|-------|
+| 1 | Market & Catalyst Analyst — SPY/QQQ bias, VIX, sector, catalyst risk (HIGH/LOW) |
+| 2 | Intraday Price & Momentum Analyst — VWAP, opening range, key levels, RSI, volume, ATR |
+| 3 | Options Flow & Environment Analyst — IV rank, skew, unusual activity, liquidity flag |
+| 4 | Strategy Selector — Buy Call vs. Buy Put vs. Sell Put; stand aside if warranted |
+| 5 | Strike & Expiration Selector — 0DTE / weekly / monthly; ATM vs. OTM; delta targets |
+| 6 | Risk, Sizing & Exit Analyst — position sizing, profit target, stop loss, time stop |
+| 7 | Day Trade Advisor — single trade with full entry/exit plan and conviction |
+
+Output ends with:
+
+```
+╔════════════════════════════════════════════════════╗
+║          DAY TRADE RECOMMENDATION                  ║
+╠════════════════════════════════════════════════════╣
+║ Ticker      : [TICKER]                             ║
+║ Strategy    : BUY CALL / BUY PUT / SELL PUT        ║
+║ Strike      : $XXX                                 ║
+║ Expiration  : YYYY-MM-DD (X DTE)                   ║
+║ Est. Premium: $X.XX/share ($XXX/contract)          ║
+║ Entry timing: [e.g., after open, VWAP pullback]    ║
+║ Conviction  : HIGH / MODERATE / LOW                ║
+╠════════════════════════════════════════════════════╣
+║ EXIT STRATEGY                                      ║
+║ Profit target : $X.XX/share (+XX%)                ║
+║ Stop loss     : $X.XX/share (−XX%)                ║
+║ Time stop     : Close by X:XX PM EST              ║
+║ Invalidation  : [1-line signal to immediately exit]║
+╚════════════════════════════════════════════════════╝
+```
+
+**Example:** `/day_trade TSLA` or `/dt TSLA`
+
+---
+
 ## Credit
 
 This skill is a distillation of the **TradingAgents** multi-agent framework, created by **Yijia Xiao, Edward Sun, Di Luo, and Wei Wang** at TauricResearch. The agent roles, pipeline structure, debate mechanics, and rating scale all originate from their work.
@@ -200,15 +246,17 @@ cp skills/stock_reco/skill.md ~/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
 cp skills/leap/skill.md ~/.claude/commands/leap.md
+cp skills/day_trade/skill.md ~/.claude/commands/day_trade.md
 ```
 
-**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`):
+**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`, `/dt`):
 
 ```bash
 cp ~/.claude/commands/stock_reco.md ~/.claude/commands/sr.md
 cp ~/.claude/commands/sell_put.md ~/.claude/commands/sp.md
 cp ~/.claude/commands/sell_call.md ~/.claude/commands/sc.md
 cp ~/.claude/commands/leap.md ~/.claude/commands/lp.md
+cp ~/.claude/commands/day_trade.md ~/.claude/commands/dt.md
 ```
 
 Open any Claude Code session and use either the full name or the alias:
@@ -218,6 +266,7 @@ Open any Claude Code session and use either the full name or the alias:
 /sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
 /leap AAPL             or  /lp AAPL
+/day_trade TSLA        or  /dt TSLA
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
@@ -247,15 +296,17 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
    - [`skills/sell_put/chat_instructions.md`](skills/sell_put/chat_instructions.md)
    - [`skills/sell_call/chat_instructions.md`](skills/sell_call/chat_instructions.md)
    - [`skills/leap/chat_instructions.md`](skills/leap/chat_instructions.md)
+   - [`skills/day_trade/chat_instructions.md`](skills/day_trade/chat_instructions.md)
 4. Save.
 
-Or use the one-liner to copy all four to clipboard:
+Or use the one-liner to copy all five to clipboard:
 
 ```bash
 cat skills/stock_reco/chat_instructions.md \
     skills/sell_put/chat_instructions.md \
     skills/sell_call/chat_instructions.md \
-    skills/leap/chat_instructions.md | pbcopy
+    skills/leap/chat_instructions.md \
+    skills/day_trade/chat_instructions.md | pbcopy
 ```
 
 Now, in any new chat within that project, type any of:
@@ -265,6 +316,7 @@ Now, in any new chat within that project, type any of:
 /sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
 /leap AAPL             or  /lp AAPL
+/day_trade TSLA        or  /dt TSLA
 ```
 
 Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
@@ -287,7 +339,10 @@ trading-skills/
     ├── sell_call/
     │   ├── skill.md               # Claude Code command (uses $ARGUMENTS: TICKER COST_BOUGHT)
     │   └── chat_instructions.md   # Claude Chat project instructions
-    └── leap/
+    ├── leap/
+    │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+    │   └── chat_instructions.md   # Claude Chat project instructions
+    └── day_trade/
         ├── skill.md               # Claude Code command (uses $ARGUMENTS)
         └── chat_instructions.md   # Claude Chat project instructions
 ```
