@@ -42,7 +42,7 @@ Conclude with an options environment rating: **Favorable / Neutral / Unfavorable
 
 ### STAGE 4 — Strike Selector
 
-**[Strike Selector]** Select the optimal strike based on the Retention Mode from Stage 1:
+**[Strike Selector]** Select the optimal strike based on the Retention Mode from Stage 1. **Anchor every strike to a specific resistance level from Stage 2's table** — state the absolute price and its Stage 2 label (e.g. "$175.00 — prior all-time high"). Derive OTM % after selecting the absolute level; do not work backwards from a percentage target.
 
 - **RETAIN**: strike at/above nearest strong resistance, 10–15%+ OTM, delta ~0.10–0.20. Minimize assignment probability.
 - **NEUTRAL**: strike near moderate resistance, 7–12% OTM, delta ~0.20–0.25.
@@ -50,7 +50,7 @@ Conclude with an options environment rating: **Favorable / Neutral / Unfavorable
 
 **Cost basis floor rule:** Strike must be ≥ cost_bought to avoid a realized loss on assignment. If the stock is underwater (current price < cost_bought), flag it and present: (a) wait for recovery, or (b) sell far OTM above cost_bought with the tradeoff noted.
 
-Provide: recommended strike (rationale, OTM %, est. delta, P&L if called away = strike − cost_bought + premium per share) and an alternative strike one step more aggressive.
+Provide: recommended strike as absolute price + Stage 2 resistance level it anchors to (OTM %, est. delta, P&L if called away = strike − cost_bought + premium per share) and an alternative strike one step more aggressive with its own Stage 2 anchor.
 
 ---
 
@@ -86,7 +86,9 @@ State today's date. Provide: recommended expiration (specific date + DTE), alter
 
 *Flag all premium estimates as illustrative if not from a live options chain.*
 
-**Final Recommendation:** State the Retention Mode and whether conditions are suitable to sell the call now. Include the specific trade, earnings/catalyst clearance confirmation, and 3 key risks: (1) sharp rally toward strike → consider buying back the call to avoid assignment, (2) large drop → premium provides only partial cushion, (3) early assignment risk near ex-div if call goes deep ITM. Exit rule: close at 50% of max profit to eliminate gamma risk; redeploy sooner.
+**Final Recommendation:** State the Retention Mode. **Commit to a recommendation only when the evidence warrants one.** If conditions are not suitable — RETAIN mode with earnings bridged, Unfavorable options environment, stock deeply underwater with no path to the strike, or premium too thin relative to risk — recommend **PASS: do not sell the call at this time** and explain why. Do not manufacture a trade to appear decisive.
+
+When conditions do support the trade, include the specific trade (strike as absolute price referencing its Stage 2 resistance anchor), earnings/catalyst clearance confirmation, and 3 key risks: (1) sharp rally toward strike → consider buying back the call to avoid assignment, (2) large drop → premium provides only partial cushion, (3) early assignment risk near ex-div if call goes deep ITM. Exit rule: close at 50% of max profit to eliminate gamma risk; redeploy sooner.
 
 ---
 

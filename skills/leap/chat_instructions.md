@@ -32,7 +32,7 @@ Conclude with: current price, 3–5 resistance levels, 3–5 support levels, bea
 
 ### STAGE 3 — LEAP Strategy Selector
 
-**[LEAP Strategy Selector]** Compare the two strategies:
+**[LEAP Strategy Selector]** Evaluate each strategy on its own independent merits before comparing — do not let the IV signal from Stage 2 pre-decide the outcome before all factors are weighed.
 
 **Buy LEAP Call:** Pay premium upfront; max loss = premium paid; profits if stock rises above strike; best when IV is low, user wants leverage.
 - Sub-types: *Stock Replacement* (HIGH conviction, delta 0.75–0.85, deep ITM) vs. *Speculative* (MODERATE conviction, delta 0.35–0.50, ATM/OTM)
@@ -48,7 +48,7 @@ Use this decision framework:
 | Preference | Leverage / upside | Income / premium |
 | Willing to own stock | Either | Strong fit |
 
-State which conditions currently favor and why. Note that both will be fully analyzed.
+State which conditions currently favor and why. If factors are genuinely balanced — MODERATE conviction with neutral IV and no dominant catalyst — say so honestly rather than forcing a preference; both strategies may be equally valid. Note that both will be fully analyzed.
 
 ---
 
@@ -56,17 +56,17 @@ State which conditions currently favor and why. Note that both will be fully ana
 
 **[Dual Strike Selector]**
 
-**Call Strike (Buy):**
-- HIGH conviction → Stock Replacement: delta 0.75–0.85, 10–20% below current price; extrinsic < 15% of total premium
-- MODERATE conviction → Speculative: delta 0.35–0.50, at or 5–10% above current price
-- Provide: strike, delta, intrinsic value, extrinsic value, breakeven at expiry (strike + premium), breakeven % move required
+**Call Strike (Buy):** Anchor to a specific resistance level from Stage 2's resistance table — state the absolute price and its Stage 2 label (e.g. "$185.00 — prior all-time high"). Derive ITM % after selecting the level.
+- HIGH conviction → Stock Replacement: delta 0.75–0.85, anchored to a resistance level below current price deep enough to hit that delta
+- MODERATE conviction → Speculative: delta 0.35–0.50, anchored at or just below nearest Stage 2 resistance above current price
+- Provide: strike (absolute price + Stage 2 resistance referenced), delta, intrinsic value, extrinsic value, breakeven at expiry (strike + premium), breakeven % move required
 
-**Put Strike (Sell):**
-- At or just below strongest support level; delta 0.20–0.30; OTM by 10–20% (LEAP puts need wider cushion than 30-day puts due to longer time horizon)
+**Put Strike (Sell):** Anchor to the strongest support level from Stage 2's support table — state the absolute price and its Stage 2 label (e.g. "$118.00 — 2023 consolidation base"). Derive OTM % after selecting the level.
+- Delta 0.20–0.30; confirm OTM is 10–20% (LEAP puts need wider cushion than 30-day puts due to longer time horizon)
 - Round number preference for better fills
-- Provide: strike, delta, OTM %, breakeven at expiry (strike − premium), effective cost basis if assigned
+- Provide: strike (absolute price + Stage 2 support referenced), delta, OTM %, breakeven at expiry (strike − premium), effective cost basis if assigned
 
-For both: include an alternative more-conservative strike.
+For both: include an alternative more-conservative strike with its own Stage 2 anchor level.
 
 ---
 
@@ -139,13 +139,15 @@ State today's date. Provide: recommended expiration (date + months out), alterna
 
 ### STAGE 7 — Final Recommendation
 
-**[LEAP Advisor]** State conviction level and preferred strategy given current conditions. Present both trades with specific details.
+**[LEAP Advisor]** State conviction level. **Commit to a preferred strategy only when the evidence clearly warrants one.** If the analysis is genuinely balanced — both strategies equally viable — say so and let the user choose based on their capital and risk preference. If MODERATE conviction with neutral IV and no strong catalyst, it is valid to recommend waiting for clearer conditions rather than forcing a preference. Do not manufacture a recommendation to appear decisive.
+
+Present both trades with specific details (strikes as absolute prices referencing their Stage 2 anchors):
 
 For the LEAP Call: specific trade, sizing guidance (e.g., "if you'd buy 100 shares at $X,000, a LEAP limits risk to $X,000 in premium"), and management: (1) roll when ~6 months DTE remain, (2) take partial profits at bull-case target, (3) cut if fundamental thesis breaks.
 
 For the LEAP Put: specific trade, capital required, and management: (1) target closing at 50% of max profit, (2) if stock approaches put strike with thesis intact, consider rolling down and out; if thesis broken, close and accept partial loss, (3) if assigned, evaluate the stock as a long-term hold at the effective cost basis.
 
-State preferred strategy clearly.
+State preferred strategy, or "both equally valid — user's choice" if evidence is balanced.
 
 ---
 
