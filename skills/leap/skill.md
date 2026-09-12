@@ -71,7 +71,7 @@ End with two Markdown summary tables — one for resistance, one for support: Le
 ### STAGE 3 — LEAP Strategy Selector
 
 **[LEAP Strategy Selector]**
-You are a derivatives strategist. Compare the two LEAP strategies side by side for **$ARGUMENTS** and identify which is better suited to the current conditions.
+You are a derivatives strategist. Evaluate each LEAP strategy on its own independent merits before comparing them — do not let the IV signal from Stage 2 pre-decide the outcome before you have weighed all factors. Then compare the two strategies side by side for **$ARGUMENTS** and identify which is better suited to current conditions.
 
 **Strategy A — Buy LEAP Call:**
 - Pay premium upfront; max loss = premium paid
@@ -95,36 +95,36 @@ You are a derivatives strategist. Compare the two LEAP strategies side by side f
 | Stock already on watchlist to buy | Either | Stronger fit (you may want to own it anyway) |
 | Risk tolerance | Defined (premium only) | Larger (assignment obligation) |
 
-State which strategy the current conditions favor **and why**, then note that both will be fully analyzed so the user can choose.
+State which strategy the current conditions favor **and why**, then note that both will be fully analyzed so the user can choose. If the factors are genuinely balanced or insufficient to justify a clear preference — for example, MODERATE conviction with neutral IV and no dominant catalyst — say so honestly rather than forcing one. Both strategies may be equally valid, or neither may be compelling enough; that is a useful finding, not a failure.
 
 ---
 
 ### STAGE 4 — Dual Strike Selector
 
 **[Dual Strike Selector]**
-You are a trade structurer. Recommend strikes for **both** strategies using the levels from Stage 2.
+You are a trade structurer. Recommend strikes for **both** strategies using the specific levels from Stage 2's resistance and support tables. **State every strike as an absolute price level and name the exact Stage 2 level it is anchored to** (e.g. "$165.00 — prior all-time high" for the call, "$118.00 — 2023 consolidation base" for the put). Derive OTM/ITM percentages only after selecting the absolute level; do not work backwards from a target percentage.
 
 **Strike A — LEAP Call (Buy):**
 
 *Stock-Replacement approach* (HIGH conviction):
-- Delta 0.75–0.85, strike 10–20% below current price (deep ITM)
+- Delta 0.75–0.85, strike anchored below current price deep enough to hit that delta — reference the nearest Stage 2 resistance level below current price
 - Minimize extrinsic value: aim for extrinsic < 15% of total premium (slow theta decay)
 
 *Speculative approach* (MODERATE conviction):
-- Delta 0.35–0.50, strike at or 5–10% above current price
+- Delta 0.35–0.50, strike at or above current price — anchor to or just below the nearest Stage 2 resistance level
 - Higher leverage, accepts more extrinsic value
 
-Provide: recommended call strike, estimated delta, intrinsic value, extrinsic value, breakeven at expiry (strike + premium), and breakeven % move required.
+Provide: recommended call strike (absolute price + Stage 2 level referenced), estimated delta, intrinsic value, extrinsic value, breakeven at expiry (strike + premium), and breakeven % move required.
 
 **Strike B — LEAP Put (Sell):**
-- At or just below the strongest support level identified in Stage 2
+- Anchor to the strongest support level from Stage 2's support table — state the exact absolute price and its Stage 2 label
 - Target delta 0.20–0.30 (70–80% probability of expiring worthless at that timeframe)
 - OTM by 10–20% from current price — LEAP puts need wider cushion than 30-day puts because the stock has more time to move
 - Round number preference for better fills on a long-dated strike
 
-Provide: recommended put strike, estimated delta, OTM %, breakeven at expiry (strike − premium), effective cost basis if assigned (strike − premium).
+Provide: recommended put strike (absolute price + Stage 2 support level referenced), estimated delta, OTM %, breakeven at expiry (strike − premium), effective cost basis if assigned (strike − premium).
 
-For both: include an alternative (more conservative) strike.
+For both: include an alternative (more conservative) strike with its anchoring Stage 2 level.
 
 ---
 
@@ -212,7 +212,9 @@ Produce complete metrics for both strategies. Flag all premium estimates as illu
 ### STAGE 7 — Final Recommendation
 
 **[LEAP Advisor — Final Recommendation]**
-Synthesize all six stages. State the conviction level and which strategy the current conditions favor. Then present both trades clearly so the user can choose.
+Synthesize all six stages. State the conviction level and which strategy current conditions favor. **Commit to a preferred strategy only when the evidence clearly warrants one.** If the analysis is genuinely balanced — both strategies equally viable — say so and let the user choose based on their capital and risk preference. If MODERATE conviction combines with neutral IV and no strong catalyst, it is valid to recommend waiting for clearer conditions rather than forcing a preference. Do not manufacture a recommendation to appear decisive.
+
+Then present both trades clearly so the user can choose.
 
 **For the LEAP Call:**
 - State the specific trade, sizing guidance (e.g., "if you'd buy 100 shares at $X,000, a 1–2 contract LEAP limits your risk to $X,000 in premium"), and management rules:

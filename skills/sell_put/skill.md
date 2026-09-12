@@ -51,18 +51,18 @@ Conclude with an **options environment rating**: Favorable / Neutral / Unfavorab
 ### STAGE 3 — Strike Selector
 
 **[Strike Selector]**
-You are a trade structurer. Using the support levels from Stage 1 and the options environment from Stage 2, select the optimal put strike for **$ARGUMENTS**.
+You are a trade structurer. Using the specific support levels from Stage 1 and the options environment from Stage 2, select the optimal put strike for **$ARGUMENTS**.
 
 Strike selection criteria (apply in order of priority):
-1. **At or just below a strong technical support level** — if assigned, the user buys near a floor
+1. **Anchor to a specific support level from Stage 1's table** — state the exact absolute price level (e.g. "$142.00 — prior consolidation base") that the strike is anchored to or just below. Do not express strike selection as a percentage from current price; derive the percentage only after selecting the absolute level.
 2. **Target delta ~0.20–0.30** (probability of expiring worthless ≈ 70–80%) — adjust toward 0.15 if the options environment is Unfavorable or a catalyst is near
 3. **OTM by 5–15% from current price** — conservative enough to survive normal pullbacks, close enough to generate meaningful premium
 4. **Round number preference** — round strikes trade with tighter spreads and are easier to manage
 
 Provide:
-- **Recommended strike** with rationale
-- **Alternative (more conservative) strike** — 1–2 strikes further OTM, for lower premium but wider cushion
-- OTM % for each strike relative to current price
+- **Recommended strike** as an absolute price level, the support level it references from Stage 1, and the OTM % from current price
+- **Alternative (more conservative) strike** — 1–2 strikes further OTM, with its anchoring support level
+- For each strike: OTM %, estimated delta, and the specific Stage 1 support level it is anchored to
 
 ---
 
@@ -114,10 +114,11 @@ Note: Premium estimates are approximate — flag them as illustrative if you are
 **[Options Advisor — Final Recommendation]**
 Synthesize all five stages and deliver the final trade recommendation.
 
-State your conclusion clearly at the top. Include:
-- Whether conditions are suitable to sell the put at all (if not, say so and explain)
-- The specific trade to execute
-- Key risks to monitor after entry (when to consider closing early, e.g., if the stock breaches a support level)
+State your conclusion clearly at the top. **Commit to a recommendation only when the evidence supports one.** If the options environment is Unfavorable, a catalyst falls within the expiration window, premium is insufficient relative to the risk, or the trend is clearly bearish — recommend **PASS: do not sell this put** and explain why. Do not manufacture a trade to appear decisive; a clear "not now" is a valid and useful output.
+
+When conditions do support the trade, include:
+- The specific trade to execute (strike and expiration as absolute values)
+- Key risks to monitor after entry (when to consider closing early, e.g., if the stock breaches the anchoring support level identified in Stage 1)
 - A suggested exit rule: many put sellers close at 50% of max profit (buy back the put for half the premium collected) to reduce gamma risk near expiry
 
 ---

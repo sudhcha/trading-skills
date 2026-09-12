@@ -91,6 +91,8 @@ Conclude with an **options environment rating**: Favorable / Neutral / Unfavorab
 **[Strike Selector]**
 You are a trade structurer. Use the Retention Mode (Stage 1), resistance levels (Stage 2), and options environment (Stage 3) to select the optimal call strike.
 
+**Anchor every strike to a specific resistance level from Stage 2's table.** State the recommended strike as an absolute price level and name the exact resistance level it sits at or above (e.g. "$175.00 — prior all-time high"). Derive the OTM % only after selecting the absolute level; do not work backwards from a percentage target.
+
 **Apply strike logic based on Retention Mode:**
 
 **RETAIN mode:**
@@ -116,8 +118,8 @@ You are a trade structurer. Use the Retention Mode (Stage 1), resistance levels 
   b. Sell a call above cost_bought even if deeply OTM (very low premium — flag the tradeoff)
 
 Provide:
-- **Recommended strike** with rationale, OTM %, estimated delta, and P&L if called away = (strike − cost_bought + premium) per share
-- **Alternative strike** (one mode step more aggressive — closer to ATM for more premium, higher assignment risk)
+- **Recommended strike** as an absolute price level, the resistance level it references from Stage 2, OTM %, estimated delta, and P&L if called away = (strike − cost_bought + premium) per share
+- **Alternative strike** (one mode step more aggressive — closer to ATM for more premium, higher assignment risk), with its anchoring resistance level
 
 ---
 
@@ -171,8 +173,10 @@ For the recommended strike and expiration, compute the full metrics. TICKER = fi
 
 **Part B — Final Recommendation**
 
-State the Retention Mode and whether conditions are suitable to sell the call now. Include:
-- The specific trade to execute
+State the Retention Mode and whether conditions support selling the call now. **Commit to a recommendation only when the evidence warrants one.** If conditions are not suitable — RETAIN mode but earnings is bridged, the options environment is Unfavorable, the stock is deeply underwater with no realistic path to the strike, or premium is too thin to justify the risk — recommend **PASS: do not sell the call at this time** and explain why. Do not manufacture a trade to appear decisive; a clear "not now" is a valid and useful output.
+
+When conditions do support the trade, include:
+- The specific trade to execute (strike and expiration as absolute values, referencing the resistance level from Stage 2 and the earnings/catalyst clearance from Stage 3)
 - **Earnings / catalyst** awareness: confirm the expiration clears any known earnings date (RETAIN) or note the deliberate decision to bridge (ACCEPT)
 - Key risks to monitor after entry:
   1. Stock rallies sharply toward strike → consider closing the call early to avoid assignment (buy back at a loss relative to premium, but retain the stock)
