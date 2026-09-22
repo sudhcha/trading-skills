@@ -159,6 +159,53 @@ Output ends with two recommendation boxes:
 
 ---
 
+### `/ipo_reco <TICKER>`
+
+IPO analysis pipeline. For a newly listed or upcoming IPO, runs a 7-stage multi-agent analysis and delivers a final recommendation on whether to buy at IPO, wait for a dip, watch, or avoid.
+
+**No technicals** — no price history means no SMA/RSI/MACD. Valuation is assessed against comparable public companies using the S-1 filing as the primary source.
+
+| Rating | Meaning |
+|--------|---------|
+| **Buy at IPO** | Strong conviction; buy at or near the IPO price |
+| **Buy on Dip** | Solid business but IPO valuation stretched; wait for 20–30%+ pullback |
+| **Watch** | Interesting but too expensive or key risks unresolved; wait for 1–2 quarters of public data |
+| **Avoid** | Risk/reward unfavorable; red flags or valuation unjustified |
+
+| Stage | Agent |
+|-------|-------|
+| 1 | Business & Growth Analyst — business model, revenue/growth, KPIs, margins, management |
+| 2 | IPO Structure Analyst — price/range, float, use of proceeds, underwriters, lock-up expiry |
+| 3 | Competitive & Valuation Analyst — TAM, comps table (EV/Revenue), IPO price vs. peers |
+| 4 | Risk & Red Flag Analyst — customer concentration, burn rate, regulatory, lock-up overhang |
+| 5 | Bull vs. Bear Debate (2 rounds) — independent cases then direct rebuttals |
+| 6 | Research Manager — Buy at IPO / Buy on Dip / Watch / Avoid |
+| 7 | Portfolio Manager — final decision with position sizing and milestones |
+
+Output ends with:
+
+```
+╔═══════════════════════════════════════════════════════╗
+║            IPO RECOMMENDATION                         ║
+╠═══════════════════════════════════════════════════════╣
+║ Company     : [Company Name]                          ║
+║ Ticker      : [TICKER]                                ║
+║ IPO Price   : $XX.XX  |  Mkt Cap: $X.XB              ║
+║ Rating      : BUY AT IPO / BUY ON DIP / WATCH / AVOID║
+╠═══════════════════════════════════════════════════════╣
+║ Bull case   : [one line]                              ║
+║ Key risk    : [one line]                              ║
+║ Lock-up exp : YYYY-MM-DD  (~XXX days from IPO)        ║
+║ Position sz : X–X% of portfolio                       ║
+╠═══════════════════════════════════════════════════════╣
+║ Watch for   : [1–2 key milestones or dates]           ║
+╚═══════════════════════════════════════════════════════╝
+```
+
+**Example:** `/ipo_reco RDDT` or `/ir RDDT`
+
+---
+
 ## Credit
 
 This skill is a distillation of the **TradingAgents** multi-agent framework, created by **Yijia Xiao, Edward Sun, Di Luo, and Wei Wang** at TauricResearch. The agent roles, pipeline structure, debate mechanics, and rating scale all originate from their work.
@@ -200,15 +247,17 @@ cp skills/stock_reco/skill.md ~/.claude/commands/stock_reco.md
 cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
 cp skills/leap/skill.md ~/.claude/commands/leap.md
+cp skills/ipo_reco/skill.md ~/.claude/commands/ipo_reco.md
 ```
 
-**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`):
+**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`, `/ir`):
 
 ```bash
 cp ~/.claude/commands/stock_reco.md ~/.claude/commands/sr.md
 cp ~/.claude/commands/sell_put.md ~/.claude/commands/sp.md
 cp ~/.claude/commands/sell_call.md ~/.claude/commands/sc.md
 cp ~/.claude/commands/leap.md ~/.claude/commands/lp.md
+cp ~/.claude/commands/ipo_reco.md ~/.claude/commands/ir.md
 ```
 
 Open any Claude Code session and use either the full name or the alias:
@@ -218,6 +267,7 @@ Open any Claude Code session and use either the full name or the alias:
 /sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
 /leap AAPL             or  /lp AAPL
+/ipo_reco RDDT         or  /ir RDDT
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
@@ -247,15 +297,17 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
    - [`skills/sell_put/chat_instructions.md`](skills/sell_put/chat_instructions.md)
    - [`skills/sell_call/chat_instructions.md`](skills/sell_call/chat_instructions.md)
    - [`skills/leap/chat_instructions.md`](skills/leap/chat_instructions.md)
+   - [`skills/ipo_reco/chat_instructions.md`](skills/ipo_reco/chat_instructions.md)
 4. Save.
 
-Or use the one-liner to copy all four to clipboard:
+Or use the one-liner to copy all five to clipboard:
 
 ```bash
 cat skills/stock_reco/chat_instructions.md \
     skills/sell_put/chat_instructions.md \
     skills/sell_call/chat_instructions.md \
-    skills/leap/chat_instructions.md | pbcopy
+    skills/leap/chat_instructions.md \
+    skills/ipo_reco/chat_instructions.md | pbcopy
 ```
 
 Now, in any new chat within that project, type any of:
@@ -265,6 +317,7 @@ Now, in any new chat within that project, type any of:
 /sell_put SPMO         or  /sp SPMO
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
 /leap AAPL             or  /lp AAPL
+/ipo_reco RDDT         or  /ir RDDT
 ```
 
 Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
@@ -290,6 +343,9 @@ trading-skills/
     ├── leap/
     │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
     │   └── chat_instructions.md   # Claude Chat project instructions
+    └── ipo_reco/
+        ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+        └── chat_instructions.md   # Claude Chat project instructions
 ```
 
 ---
