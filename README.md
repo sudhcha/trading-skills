@@ -161,16 +161,16 @@ Output ends with two recommendation boxes:
 
 ### `/ipo_reco <TICKER>`
 
-IPO analysis pipeline. For a newly listed or upcoming IPO, runs a 7-stage multi-agent analysis and delivers a final recommendation on whether to buy at IPO, wait for a dip, watch, or avoid.
+IPO analysis pipeline. For a newly listed or upcoming IPO, runs a 7-stage multi-agent analysis and delivers a final recommendation on whether to apply for the IPO, buy after listing, hold, or avoid.
 
 **No technicals** — no price history means no SMA/RSI/MACD. Valuation is assessed against comparable public companies using the S-1 filing as the primary source.
 
 | Rating | Meaning |
 |--------|---------|
-| **Buy at IPO** | Strong conviction; buy at or near the IPO price |
-| **Buy on Dip** | Solid business but IPO valuation stretched; wait for 20–30%+ pullback |
-| **Watch** | Interesting but too expensive or key risks unresolved; wait for 1–2 quarters of public data |
-| **Avoid** | Risk/reward unfavorable; red flags or valuation unjustified |
+| **Apply for IPO** | Strong conviction; subscribe for an allocation during the IPO application window, before listing |
+| **Buy After Listing** | Reasonable but not compelling enough to prioritize the application; wait for the stock to trade and buy in the secondary market |
+| **Hold** | Not attractive enough to apply for or buy fresh, but an existing holder (employee equity, pre-IPO investment, allotment) should keep the position |
+| **Avoid** | Risk/reward unfavorable; red flags or valuation unjustified — existing holders should consider trimming |
 
 | Stage | Agent |
 |-------|-------|
@@ -179,27 +179,29 @@ IPO analysis pipeline. For a newly listed or upcoming IPO, runs a 7-stage multi-
 | 3 | Competitive & Valuation Analyst — TAM, comps table (EV/Revenue), IPO price vs. peers |
 | 4 | Risk & Red Flag Analyst — customer concentration, burn rate, regulatory, lock-up overhang |
 | 5 | Bull vs. Bear Debate (2 rounds) — independent cases then direct rebuttals |
-| 6 | Research Manager — Buy at IPO / Buy on Dip / Watch / Avoid |
-| 7 | Portfolio Manager — final decision with position sizing and milestones |
+| 6 | Research Manager — Apply for IPO / Buy After Listing / Hold / Avoid |
+| 7 | Portfolio Manager — risk-adjusted final decision with position sizing and milestones |
 
 Output ends with:
 
 ```
-╔═══════════════════════════════════════════════════════╗
-║            IPO RECOMMENDATION                         ║
-╠═══════════════════════════════════════════════════════╣
-║ Company     : [Company Name]                          ║
-║ Ticker      : [TICKER]                                ║
-║ IPO Price   : $XX.XX  |  Mkt Cap: $X.XB              ║
-║ Rating      : BUY AT IPO / BUY ON DIP / WATCH / AVOID║
-╠═══════════════════════════════════════════════════════╣
-║ Bull case   : [one line]                              ║
-║ Key risk    : [one line]                              ║
-║ Lock-up exp : YYYY-MM-DD  (~XXX days from IPO)        ║
-║ Position sz : X–X% of portfolio                       ║
-╠═══════════════════════════════════════════════════════╣
-║ Watch for   : [1–2 key milestones or dates]           ║
-╚═══════════════════════════════════════════════════════╝
+╔═════════════════════════════════════════════════════════════╗
+║               IPO RECOMMENDATION                            ║
+╠═════════════════════════════════════════════════════════════╣
+║ Company     : [Company Name]                                ║
+║ Ticker      : [TICKER]                                      ║
+║ IPO Price   : $XX.XX  |  Mkt Cap: $X.XB                    ║
+║ Rating      : APPLY FOR IPO / BUY AFTER LISTING /           ║
+║               HOLD / AVOID                                  ║
+╠═════════════════════════════════════════════════════════════╣
+║ Bull case   : [one line]                                    ║
+║ Key risk    : [one line]                                    ║
+║ Lock-up exp : YYYY-MM-DD  (~XXX days from IPO)              ║
+║ Position sz : X–X% of portfolio (N/A for Hold/Avoid)        ║
+╠═════════════════════════════════════════════════════════════╣
+║ If holding  : [what an existing shareholder should do]      ║
+║ Watch for   : [1–2 key milestones or dates]                 ║
+╚═════════════════════════════════════════════════════════════╝
 ```
 
 **Example:** `/ipo_reco RDDT` or `/ir RDDT`
