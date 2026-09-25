@@ -208,6 +208,48 @@ Output ends with:
 
 ---
 
+### `/mag7_rotate [CURRENT_TICKER] [CURRENT_SHARES]`
+
+Magnificent 7 momentum rotation advisor for a **$1,000** strategy sleeve. Ranks AAPL, MSFT, GOOGL, AMZN, NVDA, META, and TSLA on 3/6/12-month returns, checks whether today is the monthly rebalance day, and produces a sell/buy recommendation. **Recommendation only** — it never places, verifies, or records trades; you track your own strategy-owned share count between months.
+
+**Arguments:** pass your current strategy-sleeve holding as `<TICKER> <SHARES>` (e.g. `NVDA 1.85`). Omit both if this is your first-ever rebalance (no existing strategy position). Because this tool has no memory between conversations, whatever you actually execute after a rebalance recommendation, record the ticker and share count yourself and pass it in next month.
+
+| Stage | Agent |
+|-------|-------|
+| 1 | Rebalance Eligibility Analyst — is today the first US trading day of the month? |
+| 2 | Mag7 Performance & Ranking Analyst — 3/6/12-month returns, per-timeframe ranks, avg rank, selection |
+| 3 | Strategy Sleeve Reconciliation Analyst — current sleeve value from your holding, strategy-owned vs. other shares |
+| 4 | Rebalance Recommendation Analyst — HOLD / sell-and-reinvest / initial buy, exact proposed order |
+| 5 | Mag7 Rotation Advisor — final summary + reminder that nothing was executed |
+
+**Fixed rules the pipeline never breaks:** never recommends touching a preexisting position in the same ticker; never recommends investing beyond the current sleeve value (no outside capital added, ever); recommends no trade if the selected stock hasn't changed.
+
+Output ends with:
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║        MAG7 ROTATION — REBALANCE RECOMMENDATION           ║
+╠═══════════════════════════════════════════════════════════╣
+║ Rebalance day?  : YES / NO  (today is trading day #N of month) ║
+║ Selected stock  : [TICKER]  (avg rank X.X)                 ║
+║ Current holding : [TICKER] X.XX shares  /  NONE (first trade) ║
+║ Action          : HOLD / SELL X → BUY Y / INITIAL BUY      ║
+╠═══════════════════════════════════════════════════════════╣
+║ Proposed SELL : [ticker] X.XX strategy-owned shares (~$XXX) ║
+║ Proposed BUY  : [ticker] ~$XXX (~X.XX shares)               ║
+║ Sleeve value  : ~$XXX  (started at $1,000; no new capital)  ║
+╠═══════════════════════════════════════════════════════════╣
+║ NOTE: Recommendation only — no trade has been placed.      ║
+║ Record the executed ticker/shares yourself for next month.  ║
+╚═══════════════════════════════════════════════════════════╝
+```
+
+**Example:** `/mag7_rotate` (first trade) or `/mag7_rotate NVDA 1.85` or `/m7 NVDA 1.85`
+
+> **Strategy credit:** the momentum-rotation rules this skill implements were originally described by [@pitdesi](https://x.com/pitdesi/status/2103189414042271914) on X.
+
+---
+
 ## Credit
 
 This skill is a distillation of the **TradingAgents** multi-agent framework, created by **Yijia Xiao, Edward Sun, Di Luo, and Wei Wang** at TauricResearch. The agent roles, pipeline structure, debate mechanics, and rating scale all originate from their work.
@@ -250,9 +292,10 @@ cp skills/sell_put/skill.md ~/.claude/commands/sell_put.md
 cp skills/sell_call/skill.md ~/.claude/commands/sell_call.md
 cp skills/leap/skill.md ~/.claude/commands/leap.md
 cp skills/ipo_reco/skill.md ~/.claude/commands/ipo_reco.md
+cp skills/mag7_rotate/skill.md ~/.claude/commands/mag7_rotate.md
 ```
 
-**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`, `/ir`):
+**Optional short aliases** (`/sr`, `/sp`, `/sc`, `/lp`, `/ir`, `/m7`):
 
 ```bash
 cp ~/.claude/commands/stock_reco.md ~/.claude/commands/sr.md
@@ -260,6 +303,7 @@ cp ~/.claude/commands/sell_put.md ~/.claude/commands/sp.md
 cp ~/.claude/commands/sell_call.md ~/.claude/commands/sc.md
 cp ~/.claude/commands/leap.md ~/.claude/commands/lp.md
 cp ~/.claude/commands/ipo_reco.md ~/.claude/commands/ir.md
+cp ~/.claude/commands/mag7_rotate.md ~/.claude/commands/m7.md
 ```
 
 Open any Claude Code session and use either the full name or the alias:
@@ -270,6 +314,7 @@ Open any Claude Code session and use either the full name or the alias:
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
 /leap AAPL             or  /lp AAPL
 /ipo_reco RDDT         or  /ir RDDT
+/mag7_rotate NVDA 1.85 or  /m7 NVDA 1.85
 ```
 
 Claude Code will substitute `$ARGUMENTS` with the ticker and run the full pipeline.
@@ -300,16 +345,18 @@ Slash commands are a Team/Enterprise plan feature and are not available on Pro. 
    - [`skills/sell_call/chat_instructions.md`](skills/sell_call/chat_instructions.md)
    - [`skills/leap/chat_instructions.md`](skills/leap/chat_instructions.md)
    - [`skills/ipo_reco/chat_instructions.md`](skills/ipo_reco/chat_instructions.md)
+   - [`skills/mag7_rotate/chat_instructions.md`](skills/mag7_rotate/chat_instructions.md)
 4. Save.
 
-Or use the one-liner to copy all five to clipboard:
+Or use the one-liner to copy all six to clipboard:
 
 ```bash
 cat skills/stock_reco/chat_instructions.md \
     skills/sell_put/chat_instructions.md \
     skills/sell_call/chat_instructions.md \
     skills/leap/chat_instructions.md \
-    skills/ipo_reco/chat_instructions.md | pbcopy
+    skills/ipo_reco/chat_instructions.md \
+    skills/mag7_rotate/chat_instructions.md | pbcopy
 ```
 
 Now, in any new chat within that project, type any of:
@@ -320,6 +367,7 @@ Now, in any new chat within that project, type any of:
 /sell_call SPMO 87.50  or  /sc SPMO 87.50
 /leap AAPL             or  /lp AAPL
 /ipo_reco RDDT         or  /ir RDDT
+/mag7_rotate NVDA 1.85 or  /m7 NVDA 1.85
 ```
 
 Claude will recognize the trigger and work through all pipeline stages automatically, using today's date. No additional prompt is needed.
@@ -345,8 +393,11 @@ trading-skills/
     ├── leap/
     │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
     │   └── chat_instructions.md   # Claude Chat project instructions
-    └── ipo_reco/
-        ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+    ├── ipo_reco/
+    │   ├── skill.md               # Claude Code command (uses $ARGUMENTS)
+    │   └── chat_instructions.md   # Claude Chat project instructions
+    └── mag7_rotate/
+        ├── skill.md               # Claude Code command (uses $ARGUMENTS: optional TICKER SHARES)
         └── chat_instructions.md   # Claude Chat project instructions
 ```
 
